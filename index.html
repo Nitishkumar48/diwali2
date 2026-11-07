@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kushwaha Family - Happy Diwali</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+
+    /* New Animated Background */
+    background: linear-gradient(
+        135deg,
+        #020024,
+        #090979,
+        #0066cc,
+        #00c6ff,
+        #020024
+    );
+
+    background-size: 400% 400%;
+    animation: backgroundMove 12s ease infinite;
+
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+/* Background Animation */
+
+@keyframes backgroundMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Fireworks Canvas */
+
+canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Welcome Screen */
+
+#welcome {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 5;
+
+    /* New Background */
+    background: linear-gradient(
+        135deg,
+        #020024,
+        #090979,
+        #0066cc,
+        #020024
+    );
+
+    background-size: 400% 400%;
+    animation: backgroundMove 12s ease infinite;
+
+    text-align: center;
+    padding: 20px;
+}
+
+#welcome h1 {
+    color: gold;
+    font-size: clamp(30px, 6vw, 65px);
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px orange;
+}
+
+#welcome button {
+    padding: 17px 35px;
+    font-size: clamp(15px, 2vw, 22px);
+    font-weight: bold;
+    border: 2px solid gold;
+    border-radius: 50px;
+    background: linear-gradient(45deg, orange, gold);
+    color: #300047;
+    cursor: pointer;
+    box-shadow: 0 0 25px orange;
+    transition: 0.3s;
+}
+
+#welcome button:hover {
+    transform: scale(1.12);
+    box-shadow: 0 0 45px gold;
+}
+
+/* Main Celebration */
+
+#celebration {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    z-index: 2;
+    padding: 20px;
+}
+
+.family {
+    font-size: clamp(45px, 11vw, 120px);
+    font-weight: 1000;
+    letter-spacing: clamp(2px, 1vw, 9px);
+    color: #180ade;
+    text-shadow:
+        0 0 10px orange,
+        0 0 25px red,
+        0 0 50px gold;
+    animation: zoom 2s ease-in-out infinite alternate;
+}
+
+.message {
+    font-size: clamp(19px, 4vw, 42px);
+    line-height: 1.5;
+    font-weight: bold;
+    color: white;
+    margin-top: 25px;
+    text-shadow: 0 0 15px orange;
+}
+
+.happy {
+    font-size: clamp(30px, 7vw, 75px);
+    color: #ffcc00;
+    margin-top: 15px;
+    font-weight: 1000;
+    text-shadow: 0 0 15px red, 0 0 35px orange;
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0.95);
+    }
+
+    to {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px orange;
+    }
+
+    to {
+        text-shadow: 0 0 35px red, 0 0 50px gold;
+    }
+}
+
+/* Small Screens */
+
+@media(max-width: 500px) {
+    .message {
+        line-height: 1.7;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<!-- First Screen -->
+
+<div id="welcome">
+
+    <h1>🪔 DIWALI CELEBRATION 🪔</h1>
+
+    <button onclick="startDiwali()">
+        ✨ OPEN DIWALI CELEBRATION ✨
+    </button>
+
+</div>
+
+
+<!-- Celebration Screen -->
+
+<div id="celebration">
+
+    <div class="family">
+        KUSHWAHA<br>FAMILY
+    </div>
+
+    <div class="message">
+        की तरफ से आप सभी को
+    </div>
+
+    <div class="happy">
+        🎆 HAPPY DIWALI 🎆
+    </div>
+
+</div>
+
+
+<script>
+
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+let rockets = [];
+let particles = [];
+let started = false;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
+
+// Start Celebration
+
+function startDiwali() {
+
+    if (started) return;
+
+    document.getElementById("welcome").style.display = "none";
+
+    document.getElementById("celebration").style.display = "flex";
+
+    started = true;
+
+    // Initial Fireworks
+
+    for(let i = 0; i < 15; i++) {
+        setTimeout(createRocket, i * 180);
+    }
+
+    // Continuous Rockets
+
+    setInterval(() => {
+        if(started) {
+            createRocket();
+        }
+    }, 350);
+
+}
+
+
+// Create Rocket
+
+function createRocket() {
+
+    rockets.push({
+
+        x: Math.random() * canvas.width,
+
+        y: canvas.height,
+
+        targetY: Math.random() * canvas.height * 0.55 + 50,
+
+        speed: Math.random() * 5 + 7,
+
+        color: randomColor()
+
+    });
+
+}
+
+
+// Random Colors
+
+function randomColor() {
+
+    const colors = [
+        "#ff0000",
+        "#ffff00",
+        "#00ffff",
+        "#ff00ff",
+        "#00ff00",
+        "#ff8800",
+        "#ffffff"
+    ];
+
+    return colors[Math.floor(Math.random() * colors.length)];
+
+}
+
+
+// Explosion
+
+function explode(x, y, color) {
+
+    let count = 100 + Math.floor(Math.random() * 70);
+
+    for(let i = 0; i < count; i++) {
+
+        let angle = Math.random() * Math.PI * 2;
+
+        let speed = Math.random() * 6 + 1;
+
+        particles.push({
+
+            x: x,
+            y: y,
+
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+
+            color: color,
+
+            life: 100,
+
+            size: Math.random() * 3 + 1
+
+        });
+
+    }
+
+}
+
+
+// Animation
+
+function animate() {
+
+    ctx.fillStyle = "rgba(2, 0, 36, 0.20)";
+
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+    // Rocket Animation
+
+    for(let i = rockets.length - 1; i >= 0; i--) {
+
+        let r = rockets[i];
+
+        r.y -= r.speed;
+
+        // Rocket Tail
+
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, 4, 0, Math.PI * 2);
+
+        ctx.fillStyle = r.color;
+
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = r.color;
+
+        ctx.fill();
+
+        // Rocket Trail
+
+        ctx.beginPath();
+
+        ctx.moveTo(r.x, r.y + 5);
+        ctx.lineTo(r.x, r.y + 30);
+
+        ctx.strokeStyle = r.color;
+        ctx.lineWidth = 3;
+
+        ctx.stroke();
+
+        if(r.y <= r.targetY) {
+
+            explode(r.x, r.y, r.color);
+
+            rockets.splice(i, 1);
+
+        }
+
+    }
+
+
+    // Explosion Particles
+
+    for(let i = particles.length - 1; i >= 0; i--) {
+
+        let p = particles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        p.vy += 0.035;
+
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+
+        p.life--;
+
+        ctx.globalAlpha = Math.max(0, p.life / 100);
+
+        ctx.beginPath();
+
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+        ctx.fillStyle = p.color;
+
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = p.color;
+
+        ctx.fill();
+
+        if(p.life <= 0) {
+            particles.splice(i, 1);
+        }
+
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+
+    requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
